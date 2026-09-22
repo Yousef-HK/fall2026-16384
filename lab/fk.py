@@ -11,8 +11,28 @@ def forward_kinematics_RR(theta1, theta2):
 
     # ============ BEGIN STUDENT SECTION ==============
     # To-Do 1: Compute the homogeneous transformation matrices H_2_0 and H_3_0
-    H_2_0 = np.eye(3)
-    H_3_0 = np.eye(3)
+    s1 = np.sin(theta1)
+    c1 = np.cos(theta1)
+    s2 = np.sin(theta2)
+    c2 = np.cos(theta2)
+    s12 = np.sin(theta1+theta2)
+    c12 = np.cos(theta1+theta2)
+    H_1_0 = np.array([[c1, -s1, 0],
+                      [s1, c1, 0],
+                      [0, 0, 1]])
+
+    H_2_a = np.array([[c2, -s2, 0],
+                      [s2, c2, 0],
+                      [0, 0, 1]])
+    H_a_1 = np.array([[1, 0, l1],
+                      [0, 1, 0],
+                      [0, 0, 1]])
+    H_2_0 = H_1_0 @ H_a_1 @ H_2_a
+
+    H_3_2 = np.array([[1, 0, l2],
+                      [0, 1, 0],
+                      [0, 0, 1]])
+    H_3_0 = H_2_0 @ H_3_2
     # ============ END STUDENT SECTION ==============
 
     return {
@@ -30,7 +50,14 @@ def jacobian_RR(theta1, theta2):
 
     # ============ BEGIN STUDENT SECTION ==============
     # To-Do 2: Compute the Jacobian matrix J
-    J = np.zeros((2, 2))
+    s1 = np.sin(theta1)
+    c1 = np.cos(theta1)
+    s12 = np.sin(theta1+theta2)
+    c12 = np.cos(theta1+theta2)
+
+
+    J = np.array([[-(l1*s1 + l2*s12), -l2*s12],
+                  [l1*c1 + l2*c12, l2*c12]])
     # ============ END STUDENT SECTION ==============
 
     return J
